@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <f:view>
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <h:outputStylesheet library="css" name="estilos.css"/>
+
+            <title>
+                <ui:insert name="titulo">
+                    Firma Electronica Beta
+                </ui:insert>
+            </title>
+        </h:head>
+
+        <h:body>
+
+            <center>
+                <div id="content">
+                    <p:layout fullPage="true">
+                        <!--                        Creacion de Menu
+                                                <p:layoutUnit position="north" resizable="true" >
+                                                    <h:form id="panelMenu">
+                                                        <p:menubar >
+                                                            <p:menuitem value="Servicios" update="@form" ajax="true" action="adminservicio" icon="ui-icon-folder-open" />
+                                                            <p:menuitem value="Comprar" update="@form" ajax="true" action="ingreso" icon="ui-icon-cart" />
+                                                        </p:menubar>
+                                                    </h:form>
+                                                </p:layoutUnit>-->
+
+                        <!--                        <p:layoutUnit position="west" resizable="true" size="200" minSize="40" maxSize="300">
+                                                </p:layoutUnit>-->
+
+                        <p:layoutUnit position="center">
+                            <p:graphicImage value="/resources/images/espe.jpg" width="540px" height="160px" />
+                            <br></br>
+                            <br></br>
+                            <h1 style='color: black'>FIRMAR DIGITAL</h1>
+                            <ui:insert name="contenido" ></ui:insert>
+                            <h3 style="color:green">Seleccione documento PDF: </h3>
+
+                            <h:form enctype="multipart/form-data">
+                                
+                                <p:growl id="messages" showDetail="true" sticky="true"/>
+
+                                <p:fileUpload id="archivoPDF" multiple="false"
+                                              value="#{fileuploadviewBean.filePDF}" 
+                               mode="simple"/>
+                                <br></br>
+                                
+                                <br></br>
+                                <h3 style="color:green">Seleccione Certificado Digital: </h3>
+                                <p:fileUpload id="archivoP12" multiple="false"
+                                              value="#{fileuploadviewBean.fileP12}" 
+                               mode="simple"/>
+                                <br></br>
+                                
+                                <br></br>
+                                <h3 style="color:green">Ingrese Password del Certificado: </h3>
+                                <p:password id="nonFeedback" value="#{fileuploadviewBean.passFileP12}" style="text-align: center;"/>
+                                <br></br>
+                                
+                                <br></br>
+                                <p:commandButton value="Firmar" ajax="false" action="#{fileuploadviewBean.upload()}" icon="ui-icon-pencil"/>
+                               
+                                
+                                <p:commandButton value="Descargar" ajax="false" icon="ui-icon-document" disabled="false" >
+                                    <p:fileDownload value="#{fileuploadviewBean.descargarPDF()}" />  
+                                </p:commandButton>
+
+                            </h:form>
+
+                        </p:layoutUnit>
+
+                        <p:layoutUnit position="south" resizable="true">
+                            <p class="piePagina">Copyright &copy; Developer UTICS 2017</p>
+                        </p:layoutUnit>
+
+                    </p:layout>
+                    <!--<ui:insert name="modales">Aqui van los modales</ui:insert>-->
+
+                </div>           
+
+            </center>
+
+
+        </h:body>
+
+    </f:view>
+
+</html>
