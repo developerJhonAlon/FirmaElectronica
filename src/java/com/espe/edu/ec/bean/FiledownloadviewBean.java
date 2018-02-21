@@ -28,6 +28,9 @@ public class FiledownloadviewBean implements Serializable{
     }
  
     public StreamedContent getFile() {
+        
+        
         return file;
+        
     }
 }

@@ -50,7 +50,8 @@ and open the template in the editor.
 
                             <h:form enctype="multipart/form-data">
                                 
-                                <p:growl id="messages" showDetail="true" sticky="true"/>
+                               
+                                <p:growl id="messages" showDetail="true" life="3000"/>
 
                                 <p:fileUpload id="archivoPDF" multiple="false"
                                               value="#{fileuploadviewBean.filePDF}" 

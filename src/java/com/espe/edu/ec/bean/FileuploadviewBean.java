@@ -7,6 +7,7 @@ package com.espe.edu.ec.bean;
 
 import com.espe.edu.ec.service.FirmarDocumentoService;
 import java.io.File;
+import static java.io.File.separatorChar;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,6 +21,7 @@ import javax.ejb.EJB;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
@@ -34,17 +36,16 @@ import org.primefaces.model.UploadedFile;
  * @author Klever
  */
 @ManagedBean
+@ViewScoped
 public class FileuploadviewBean implements Serializable {
 
-    FirmarDocumentoService firmarDocumento = new FirmarDocumentoService();
+    private final FirmarDocumentoService firmarDocumento = new FirmarDocumentoService();
     private String realPath = "", passFileP12;
     private UploadedFile filePDF,fileP12;
     private StreamedContent file;
     private boolean btnDescagar = true;
 
     public FileuploadviewBean() {
-//        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-//        realPath = (String) servletContext.getRealPath("/"); // Sustituye "/" por el directorio ej: "/upload"
     }
 
     public boolean isBtnDescagar() {
@@ -83,24 +84,13 @@ public class FileuploadviewBean implements Serializable {
         this.fileP12 = fileP12;
     }
     
-    
-
-   
-
     public void upload() throws GeneralSecurityException, IOException {
-        
-        
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
-        
         System.out.println("path 2:" + externalContext.getRealPath("/upload/"));
         
         String sourceFilePDF, sourceFileP12;
         
-        String pathArray[] = realPath.split("Documents");
-            for (String path : pathArray) {
-                System.out.println(path);
-            }
         realPath = externalContext.getRealPath("/upload/") + File.separator +"Firmado.pdf";    
         //System.out.println("");
         
@@ -108,12 +98,16 @@ public class FileuploadviewBean implements Serializable {
         sourceFileP12 = this.handleFileUpload(fileP12);
         
         System.out.println("sourceFilePDF:" +sourceFilePDF+ " sourceNewFile: "+realPath );
-        System.out.println("sourceFileP12:" +sourceFileP12);
+        System.out.println("sourceFileP12:" +sourceFileP12);        
         
-        
+        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();         
+        String path = servletContext.getRealPath("");
+        String carpetaAdjuntos = "documentos_adjuntos" + separatorChar + "anexos";
+        System.out.println("PARTH APLICACION"+ path + "SEPARADOR: "+carpetaAdjuntos);
         
         firmarDocumento.iniciar(sourceFilePDF,realPath , sourceFileP12 ,this.passFileP12);
-        
+        sourceFileP12 = null;
+        sourceFilePDF = null;
         
         //this.btnDescagar = false;
 
@@ -124,16 +118,13 @@ public class FileuploadviewBean implements Serializable {
     
 
     //Jhonny: Carga de Documento
-    
-        
     public String handleFileUpload(UploadedFile file1 ) {
-        
-        
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
 
         System.out.println("path 1:" + externalContext.getRealPath("/upload/"));
+       
 
         System.out.println("file solo:" + file1.getFileName());
       
@@ -254,24 +245,20 @@ public class FileuploadviewBean implements Serializable {
 //    
     
      public StreamedContent descargarPDF() throws FileNotFoundException {
-        //InputStream
-        
-        
-        InputStream stream = new FileInputStream("C:\\Users\\Jhonny\\GlassFish_Server\\glassfish\\domains\\domain1\\var\\webapp\\upload\\Firmado.pdf");
-        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        System.out.println("path of files: " + externalContext.getRealPath("/upload/"));
+        //input entra un archivo o objecto a java, out sale o write un archivo fuera de java.
+        InputStream stream = new FileInputStream(externalContext.getRealPath("/upload/") + File.separator +"Firmado.pdf");
         this.file = new DefaultStreamedContent(stream, "application/pdf", "Firmado.pdf");
         
-        File directorio = new File("C:\\Users\\Jhonny\\GlassFish_Server\\glassfish\\domains\\domain1\\var\\webapp\\upload"); 
-        
+        File directorio = new File(externalContext.getRealPath("/upload/"));
         File[] ficheros = directorio.listFiles();
-        
-         for (File fichero : ficheros) {
+        for (File fichero : ficheros) {
              fichero.delete();
-         }
-        
+         } 
         
         return this.file;
-        
     }
 
 }
